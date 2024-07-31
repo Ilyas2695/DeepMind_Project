@@ -20,9 +20,10 @@ def main():
     test_folder = r'C:\Users\ilyas\dev\xdsl\tests\backend\riscv'
     files = os.listdir(test_folder)
     if files:
-        file_path = os.path.join(test_folder, files[0])
-        operation_counts = count_operations(file_path)
-        print(f"Operation counts in file {files[0]}: {operation_counts}")
+        for file in files:
+            file_path = os.path.join(test_folder, file)
+            operation_counts = count_operations(file_path)
+            print(f"Operation counts in file {file}: {operation_counts}")
     else:
         print("No files found in the test folder.")
 
