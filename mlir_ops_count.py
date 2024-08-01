@@ -1,5 +1,7 @@
 import re
 import os
+import jax.numpy as jnp
+from jax import lax
 
 def remove_comments(code):
     code = re.sub(r'//.*', '', code)
@@ -12,10 +14,12 @@ def extract_operations(file_path, operations):
 
     content = remove_comments(content)
 
-    operation_counts = {op: 0 for op in operations}
+    operation_counts = jnp.zeros(len(operations), dtype=jnp.int32)
 
-    for op in operations:
-        operation_counts[op] = content.count(op)
+    for i, op in enumerate(operations):
+        pattern = re.compile(r'\b' + re.escape(op) + r'\b')
+        count = len(pattern.findall(content))
+        operation_counts = lax.dynamic_update_index_in_dim(operation_counts, count, i, 0)
     
     return operation_counts
 
@@ -26,14 +30,24 @@ def main():
         return
 
     operations = [
+        # Standard Dialect
         'add', 'sub', 'mul', 'div', 'rem', 'neg', 'and', 'or', 'xor', 'not', 'cmp', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 
         'index_cast', 'sext', 'zext', 'trunc', 'alloc', 'dealloc', 'load', 'store',
+        # Affine Dialect
         'affine_map', 'affine.for', 'affine.parallel', 'affine.if', 'affine.else', 'affine.load', 'affine.store', 
-        'affine.min', 'affine.max', 'scf.for', 'scf.parallel', 'scf.while', 'scf.if', 'scf.else', 'scf.yield', 
+        'affine.min', 'affine.max', 
+        # SCF Dialect
+        'scf.for', 'scf.parallel', 'scf.while', 'scf.if', 'scf.else', 'scf.yield', 
+        # LLVM Dialect
         'llvm.add', 'llvm.sub', 'llvm.mul', 'llvm.and', 'llvm.or', 'llvm.xor', 'llvm.alloca', 'llvm.load', 'llvm.store', 
-        'llvm.br', 'llvm.cond_br', 'llvm.switch', 'llvm.ret', 'llvm.intrinsic', 'tensor.extract', 'tensor.insert', 
-        'tensor.cast', 'linalg.matmul', 'linalg.batch_matmul', 'linalg.vecmatmul', 'linalg.conv', 'linalg.depthwise_conv', 
-        'linalg.reduce'
+        'llvm.br', 'llvm.cond_br', 'llvm.switch', 'llvm.ret', 'llvm.intrinsic', 
+        # Tensor Dialect
+        'tensor.extract', 'tensor.insert', 'tensor.cast', 
+        # Linalg Dialect
+        'linalg.matmul', 'linalg.batch_matmul', 'linalg.vecmatmul', 'linalg.conv', 'linalg.depthwise_conv', 'linalg.reduce',
+        # Additional operations
+        'arith.constant', 'arith.addi', 'builtin.module', 'builtin.unrealized_conversion_cast', 'riscv.mv', 'riscv.fmv.s', 
+        'riscv.fmv.d', 'riscv_scf.for', 'riscv_scf.yield'
     ]
 
     files = os.listdir(test_folder)
@@ -43,11 +57,11 @@ def main():
         for file in mlir_files:
             file_path = os.path.join(test_folder, file)
             operation_counts = extract_operations(file_path, operations)
-            if any(operation_counts.values()):
+            if jnp.any(operation_counts > 0):
                 print(f"Operation counts in file {file}:")
-                for op, count in operation_counts.items():
+                for i, count in enumerate(operation_counts):
                     if count > 0:
-                        print(f"{op}: {count}")
+                        print(f"  {operations[i]}: {count}")
             else:
                 print(f"No operations found in file {file}.")
     else:
