@@ -30,24 +30,18 @@ def main():
         return
 
     operations = [
-        # Standard Dialect
         'add', 'sub', 'mul', 'div', 'rem', 'neg', 'and', 'or', 'xor', 'not', 'cmp', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 
         'index_cast', 'sext', 'zext', 'trunc', 'alloc', 'dealloc', 'load', 'store',
-        # Affine Dialect
         'affine_map', 'affine.for', 'affine.parallel', 'affine.if', 'affine.else', 'affine.load', 'affine.store', 
         'affine.min', 'affine.max', 
-        # SCF Dialect
         'scf.for', 'scf.parallel', 'scf.while', 'scf.if', 'scf.else', 'scf.yield', 
-        # LLVM Dialect
         'llvm.add', 'llvm.sub', 'llvm.mul', 'llvm.and', 'llvm.or', 'llvm.xor', 'llvm.alloca', 'llvm.load', 'llvm.store', 
         'llvm.br', 'llvm.cond_br', 'llvm.switch', 'llvm.ret', 'llvm.intrinsic', 
-        # Tensor Dialect
         'tensor.extract', 'tensor.insert', 'tensor.cast', 
-        # Linalg Dialect
         'linalg.matmul', 'linalg.batch_matmul', 'linalg.vecmatmul', 'linalg.conv', 'linalg.depthwise_conv', 'linalg.reduce',
-        # Additional operations
-        'arith.constant', 'arith.addi', 'builtin.module', 'builtin.unrealized_conversion_cast', 'riscv.mv', 'riscv.fmv.s', 
-        'riscv.fmv.d', 'riscv_scf.for', 'riscv_scf.yield'
+        'arith.constant', 'arith.addi', 'builtin.module', 'builtin.unrealized_conversion_cast', 
+        'riscv.mv', 'riscv.fmv.s', 'riscv.fmv.d', 'riscv_scf.for', 'riscv_scf.yield',
+        'riscv.li', 'riscv.reg', 'riscv.sw', 'riscv.lw'   # Include RISC-V specific operations
     ]
 
     files = os.listdir(test_folder)
