@@ -41,7 +41,7 @@ def main():
         'linalg.matmul', 'linalg.batch_matmul', 'linalg.vecmatmul', 'linalg.conv', 'linalg.depthwise_conv', 'linalg.reduce',
         'arith.constant', 'arith.addi', 'builtin.module', 'builtin.unrealized_conversion_cast', 
         'riscv.mv', 'riscv.fmv.s', 'riscv.fmv.d', 'riscv_scf.for', 'riscv_scf.yield',
-        'riscv.li', 'riscv.reg', 'riscv.sw', 'riscv.lw'   # Include RISC-V specific operations
+        'riscv.li', 'riscv.reg', 'riscv.sw', 'riscv.lw'
     ]
 
     files = os.listdir(test_folder)
