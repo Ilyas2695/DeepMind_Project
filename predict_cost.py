@@ -49,6 +49,6 @@ if __name__ == "__main__":
     for dialect_name, dialect_factory in get_all_dialects().items():
         context.register_dialect(dialect_name, dialect_factory)
 
-    file_path = r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend\riscv\convert_arith_to_riscv.mlir'
+    file_path = r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend\convert_riscv_scf_to_riscv_cf_with_regalloc.mlir'
     predicted_cost = predict_cost(file_path, model, scaler, all_operations, context)
     print(f"Predicted cost for {file_path}: {predicted_cost}")

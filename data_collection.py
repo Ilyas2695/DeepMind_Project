@@ -55,4 +55,4 @@ def collect_data(test_folder, output_file):
                     print(f"Error parsing file {file}: {e}")
 
 if __name__ == "__main__":
-    collect_data(r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend', 'operation_costs.jsonl')
+    collect_data(r'C:\Users\ilyas\dev\DeepMind_Project\training_files', 'operation_costs.jsonl')
