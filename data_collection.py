@@ -1,8 +1,14 @@
 import os
 import json
+import re
 from xdsl.context import MLContext
 from xdsl.dialects import get_all_dialects
 from xdsl.parser import Parser
+
+def remove_comments(content):
+    content = re.sub(r'//.*', '', content)
+    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+    return content
 
 def count_operations(module):
     operation_counts = {}
@@ -18,6 +24,8 @@ def count_operations(module):
 def parse_mlir_file(file_path, context):
     with open(file_path, 'r') as f:
         content = f.read()
+
+    content = remove_comments(content)
 
     parser = Parser(context, content)
     module = parser.parse_module()
