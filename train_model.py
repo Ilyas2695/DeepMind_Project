@@ -4,19 +4,25 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-with open('operation_costs.json', 'r') as f:
-    data = json.load(f)
-
 X = []
 y = []
 
-all_operations = sorted({op for entry in data for op in entry['operation_counts'].keys()})
+all_operations = set()
 
-for entry in data:
-    counts = entry['operation_counts']
-    features = [counts.get(op, 0) for op in all_operations]
-    X.append(features)
-    y.append(entry['cost'])
+with open('operation_costs.jsonl', 'r') as f:
+    for line in f:
+        entry = json.loads(line)
+        all_operations.update(entry['operation_counts'].keys())
+
+all_operations = sorted(all_operations)
+
+with open('operation_costs.jsonl', 'r') as f:
+    for line in f:
+        entry = json.loads(line)
+        counts = entry['operation_counts']
+        features = [counts.get(op, 0) for op in all_operations]
+        X.append(features)
+        y.append(entry['cost'])
 
 X = np.array(X)
 y = np.array(y)
