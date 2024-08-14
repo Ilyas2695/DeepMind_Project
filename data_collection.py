@@ -1,8 +1,7 @@
 import os
 import json
 import re
-from xdsl.context import MLContext
-from xdsl.dialects import get_all_dialects
+from utils import create_context_with_all_dialects
 from xdsl.parser import Parser
 
 def remove_comments(content):
@@ -32,9 +31,7 @@ def parse_mlir_file(file_path, context):
     return module
 
 def collect_data(test_folder, output_file):
-    context = MLContext()
-    for dialect_name, dialect_factory in get_all_dialects().items():
-        context.register_dialect(dialect_name, dialect_factory)
+    context = create_context_with_all_dialects()
     
     if not os.path.isdir(test_folder):
         print(f"The provided path '{test_folder}' is not a directory.")

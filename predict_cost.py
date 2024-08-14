@@ -1,8 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import json
-from xdsl.context import MLContext
-from xdsl.dialects import get_all_dialects
+from utils import create_context_with_all_dialects
 from xdsl.parser import Parser
 from sklearn.preprocessing import StandardScaler
 
@@ -45,9 +44,7 @@ if __name__ == "__main__":
     scaler = StandardScaler()
     scaler.fit_transform([np.zeros(len(all_operations))])
 
-    context = MLContext()
-    for dialect_name, dialect_factory in get_all_dialects().items():
-        context.register_dialect(dialect_name, dialect_factory)
+    context = create_context_with_all_dialects()
 
     file_path = r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend\convert_riscv_scf_to_riscv_cf.mlir'
     predicted_cost = predict_cost(file_path, model, scaler, all_operations, context)
