@@ -4,6 +4,8 @@ import re
 from utils import create_context_with_all_dialects
 from xdsl.parser import Parser
 
+SCALING_FACTOR = 10
+
 def remove_comments(content):
     content = re.sub(r'//.*', '', content)
     content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
@@ -48,7 +50,7 @@ def collect_data(test_folder, output_file):
                     module = parse_mlir_file(file_path, context)
                     operation_counts = count_operations(module)
                     
-                    cost = sum(operation_counts.values()) * 10
+                    cost = sum(operation_counts.values()) * SCALING_FACTOR
                     
                     record = {
                         "file": file,
