@@ -25,7 +25,7 @@ def predict_cost(file_path, model, scaler, all_operations, context):
     predicted_cost = model.predict(features)
     return predicted_cost[0][0]
 
-if __name__ == "__main__":
+def main():
     model = tf.keras.models.load_model('cost_estimation_model.h5')
 
     with open('operation_costs.jsonl', 'r') as f:
@@ -40,3 +40,6 @@ if __name__ == "__main__":
     file_path = r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend\convert_riscv_scf_to_riscv_cf.mlir'
     predicted_cost = predict_cost(file_path, model, scaler, all_operations, context)
     print(f"Predicted cost for {file_path}: {predicted_cost}")
+
+if __name__ == "__main__":
+    main()
