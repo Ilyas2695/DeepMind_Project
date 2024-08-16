@@ -1,8 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import json
-from utils import create_context_with_all_dialects
-from xdsl.parser import Parser
+from utils import create_context_with_all_dialects, parse_mlir_file
 from sklearn.preprocessing import StandardScaler
 
 def count_operations(module):
@@ -15,14 +14,6 @@ def count_operations(module):
         operation_counts[op_name] += 1
     
     return operation_counts
-
-def parse_mlir_file(file_path, context):
-    with open(file_path, 'r') as f:
-        content = f.read()
-    
-    parser = Parser(context, content)
-    module = parser.parse_module()
-    return module
 
 def predict_cost(file_path, model, scaler, all_operations, context):
     module = parse_mlir_file(file_path, context)

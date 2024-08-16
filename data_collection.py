@@ -1,15 +1,8 @@
 import os
 import json
-import re
-from utils import create_context_with_all_dialects
-from xdsl.parser import Parser
+from utils import create_context_with_all_dialects, parse_mlir_file
 
 SCALING_FACTOR = 10
-
-def remove_comments(content):
-    content = re.sub(r'//.*', '', content)
-    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
-    return content
 
 def count_operations(module):
     operation_counts = {}
@@ -21,16 +14,6 @@ def count_operations(module):
         operation_counts[op_name] += 1
     
     return operation_counts
-
-def parse_mlir_file(file_path, context):
-    with open(file_path, 'r') as f:
-        content = f.read()
-
-    content = remove_comments(content)
-
-    parser = Parser(context, content)
-    module = parser.parse_module()
-    return module
 
 def collect_data(test_folder, output_file):
     context = create_context_with_all_dialects()
