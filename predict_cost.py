@@ -37,7 +37,7 @@ def main():
 
     context = create_context_with_all_dialects()
 
-    file_path = r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend\convert_riscv_scf_to_riscv_cf.mlir'
+    file_path = r'C:\Users\ilyas\dev\DeepMind_Project\example_files\convert_riscv_scf_to_riscv_cf_with_regalloc.mlir'
     predicted_cost = predict_cost(file_path, model, scaler, all_operations, context)
     print(f"Predicted cost for {file_path}: {predicted_cost}")
 

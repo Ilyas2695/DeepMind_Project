@@ -3,9 +3,9 @@ import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt  # Import matplotlib for plotting
+import matplotlib.pyplot as plt
+from tensorflow import keras
 
-# Load and prepare data
 X = []
 y = []
 
@@ -34,32 +34,32 @@ X = scaler.fit_transform(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Define the model
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
-    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],), kernel_regularizer=keras.regularizers.l2(0.001)),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=keras.regularizers.l2(0.001)),
+    tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(1)
 ])
 
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Train the model and record the history
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+
 history = model.fit(
     X_train, y_train,
-    epochs=10,
+    epochs=100,
     batch_size=16,
     validation_split=0.1,
+    callbacks=[early_stopping],
     verbose=1
 )
 
-# Evaluate the model
 loss = model.evaluate(X_test, y_test)
 print(f"Test loss: {loss}")
 
-# Save the model
 model.save('cost_estimation_model.h5')
 
-# Plot the training and validation loss
 plt.figure(figsize=(10, 6))
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
@@ -68,5 +68,5 @@ plt.ylabel('Loss')
 plt.title('Training and Validation Loss Over Epochs')
 plt.legend()
 plt.grid(True)
-plt.savefig('training_validation_loss.png')  # Save the plot as a PNG file
+plt.savefig('training_validation_loss.png')
 plt.show()
