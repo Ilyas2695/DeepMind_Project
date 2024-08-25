@@ -35,23 +35,27 @@ X = scaler.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],), kernel_regularizer=keras.regularizers.l2(0.001)),
+    tf.keras.layers.Dense(128, activation='relu', input_shape=(X_train.shape[1],), kernel_regularizer=keras.regularizers.l2(0.001)),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=keras.regularizers.l2(0.001)),
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=keras.regularizers.l2(0.001)),
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(1)
 ])
 
-model.compile(optimizer='adam', loss='mean_squared_error')
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+model.compile(optimizer=optimizer, loss='mean_squared_error')
 
-early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, verbose=1)
 
 history = model.fit(
     X_train, y_train,
     epochs=100,
-    batch_size=16,
+    batch_size=32,  
     validation_split=0.1,
-    callbacks=[early_stopping],
+    callbacks=[early_stopping, lr_scheduler],
     verbose=1
 )
 
