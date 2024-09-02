@@ -61,7 +61,7 @@ Run the data collection script to parse MLIR files and generate operation cost d
 ```bash
 python data_collection.py
 ```
-This script reads MLIR files from a specified directory, counts operations, and saves the results in operation_costs.jsonl.
+This part reads MLIR files from a specified directory, counts operations, and saves the results in operation_costs.jsonl.
 
 ### Train the Model
 Train the neural network model using the collected data:
@@ -77,8 +77,4 @@ To predict the computational cost of new MLIR files, run:
 ```bash
 python predict_cost.py
 ```
-This script loads the trained model and predicts the cost for a specified MLIR file.
-
-## Results
-The training and validation loss graph provides insights into the model's performance over epochs:
-
+This part loads the trained model and predicts the cost for a specified MLIR file.
