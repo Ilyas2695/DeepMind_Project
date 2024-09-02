@@ -43,7 +43,7 @@ The MLIR Cost Estimation Project is designed to help developers predict the comp
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/mlir-cost-estimation.git
+    git clone https://github.com/Ilyas2695/mlir_cost_estimator
     cd mlir-cost-estimation
     ```
 
