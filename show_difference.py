@@ -50,7 +50,7 @@ def calculate_predicted_costs(file_paths, model, scaler, all_operations, context
             predicted_costs.append(cost)
         except Exception as e:
             print(f"Error predicting cost for {file_path}: {e}")
-            predicted_costs.append(None)  # Handle failed predictions
+            predicted_costs.append(None)
     return predicted_costs
 
 def plot_costs(real_costs, predicted_costs, file_names):
