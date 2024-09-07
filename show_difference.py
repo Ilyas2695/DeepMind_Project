@@ -10,7 +10,6 @@ from predict_cost import predict_cost
 SCALING_FACTOR = 10
 
 def count_operations(module):
-    """Counts the operations in an MLIR module."""
     operation_counts = {}
     for op in module.walk():
         op_name = op.name
@@ -20,7 +19,6 @@ def count_operations(module):
     return operation_counts
 
 def collect_data(test_folder):
-    """Collects real costs from MLIR files in the specified test folder."""
     real_costs = []
     file_names = []
     
@@ -45,7 +43,6 @@ def collect_data(test_folder):
     return real_costs, file_names
 
 def calculate_predicted_costs(file_paths, model, scaler, all_operations, context):
-    """Calculates predicted costs for each MLIR file."""
     predicted_costs = []
     for file_path in file_paths:
         try:
@@ -57,7 +54,6 @@ def calculate_predicted_costs(file_paths, model, scaler, all_operations, context
     return predicted_costs
 
 def plot_costs(real_costs, predicted_costs, file_names):
-    """Plots a graph comparing real and predicted costs."""
     plt.figure(figsize=(10, 6))
     plt.plot(file_names, real_costs, label='Real Cost', marker='o')
     plt.plot(file_names, predicted_costs, label='Predicted Cost', marker='x')
@@ -70,30 +66,23 @@ def plot_costs(real_costs, predicted_costs, file_names):
     plt.show()
 
 def main():
-    # Load the pre-trained model
     model = tf.keras.models.load_model('cost_estimation_model.h5')
 
-    # Load operation costs and extract unique operations
     with open('operation_costs.jsonl', 'r') as f:
         data = [json.loads(line) for line in f]
     all_operations = sorted({op for entry in data for op in entry['operation_counts'].keys()})
 
-    # Initialize the scaler
     scaler = StandardScaler()
     scaler.fit_transform([np.zeros(len(all_operations))])
 
-    # Prepare MLIR files and context
     test_directory = 'testing_files'
     context = create_context_with_all_dialects()
 
-    # Collect real costs
     real_costs, file_names = collect_data(test_directory)
 
-    # Predict costs
     file_paths = [os.path.join(test_directory, file) for file in file_names]
     predicted_costs = calculate_predicted_costs(file_paths, model, scaler, all_operations, context)
 
-    # Plot the costs
     plot_costs(real_costs, predicted_costs, file_names)
 
 if __name__ == "__main__":
