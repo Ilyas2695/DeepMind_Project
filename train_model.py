@@ -52,9 +52,9 @@ lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0
 
 history = model.fit(
     X_train, y_train,
-    epochs=80,
+    epochs=50,
     batch_size=32,  
-    validation_split=0.2,
+    validation_split=0.2,   
     callbacks=[early_stopping, lr_scheduler],
     verbose=1
 )
