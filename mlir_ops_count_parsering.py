@@ -35,7 +35,7 @@ def parse_mlir_file(file_path):
     return module
 
 def main():
-    test_folder = r'C:\Users\ilyas\dev\xdsl\tests\filecheck\backend'
+    test_folder = r'C:\Users\ilyas\dev\DeepMind_Project\testing_files'
     
     if not os.path.isdir(test_folder):
         print(f"The provided path '{test_folder}' is not a directory.")
